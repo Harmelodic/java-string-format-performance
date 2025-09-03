@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.harmelodic</groupId>
-    <artifactId>java-strings-performance</artifactId>
+    <artifactId>java-string-format-performance</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

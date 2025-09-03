@@ -1,4 +1,3 @@
 # java-string-format-performance
 
-Testing string concatenation performance in Java.
- 
+Testing string concatenation / formatting performance in Java.

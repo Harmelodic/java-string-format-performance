@@ -64,7 +64,7 @@ class SimplePerformanceTests {
 	@Test
 	@Order(3)
 	void testApacheStringUtils() {
-		Duration timeTaken = simplePerformanceTest(new ApacheStringUtils());
+		Duration timeTaken = simplePerformanceTest(new ApacheStringUtilsWrapWithPlusOperator());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}

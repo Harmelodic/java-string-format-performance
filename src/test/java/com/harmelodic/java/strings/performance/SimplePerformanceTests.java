@@ -13,25 +13,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SimplePerformanceTests {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimplePerformanceTests.class);
 
-	Duration simplePerformanceTest(SimpleStringFormatter formatter) {
+	Duration simplePerformanceTest(SimpleStringConcatenation formatter) {
 		Instant start = Instant.now();
 
-		for (int i = 0; i < 1_000_000; i++) {
-			formatter.format(
-					UUID.randomUUID().toString(),
-					UUID.randomUUID().toString(),
-					UUID.randomUUID().toString(),
-					UUID.randomUUID().toString());
+		for (int i = 0; i < 10_000_000; i++) {
+			formatter.format(UUID.randomUUID().toString(), UUID.randomUUID().toString());
 		}
 		Duration timeTaken = Duration.between(start, Instant.now());
-		LOGGER.info("Took: {} ms", timeTaken.toMillis());
+		LOGGER.info("Formatter {} took: {} ms", formatter.getClass().getSimpleName(), timeTaken.toMillis());
 		return timeTaken;
 	}
 
 	@Test
-	void testPlusOperatorConcatenation() {
-		Duration timeTaken = simplePerformanceTest(new PlusOperatorConcatenation());
+	void testPlusOperator() {
+		Duration timeTaken = simplePerformanceTest(new PlusOperator());
 		assertTrue(timeTaken.isPositive());
-		assertTrue(timeTaken.toMillis() < 2000);
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	@Test
+	void testStringFormat() {
+		Duration timeTaken = simplePerformanceTest(new StringFormat());
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
 	}
 }

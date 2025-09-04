@@ -24,6 +24,7 @@ class SimplePerformanceTests {
 		return timeTaken;
 	}
 
+	/// As of JDK 24 on a Framework 13" 13th Gen: ~3340ms (first)
 	@Test
 	void testUsingPlusOperator() {
 		Duration timeTaken = simplePerformanceTest(new UsingPlusOperator());
@@ -31,16 +32,26 @@ class SimplePerformanceTests {
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
+	/// As of JDK 24 on a Framework 13" 13th Gen: ~3360ms (second)
 	@Test
-	void testUsingStringFormat() {
-		Duration timeTaken = simplePerformanceTest(new UsingStringFormat());
+	void testUsingPlusOperatorWithConstants() {
+		Duration timeTaken = simplePerformanceTest(new UsingPlusOperatorWithConstants());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
+	/// As of JDK 24 on a Framework 13" 13th Gen: ~3560ms (third)
 	@Test
 	void testUsingStringBuilder() {
 		Duration timeTaken = simplePerformanceTest(new UsingStringBuilder());
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	/// As of JDK 24 on a Framework 13" 13th Gen: ~4460ms (fourth)
+	@Test
+	void testUsingStringFormat() {
+		Duration timeTaken = simplePerformanceTest(new UsingStringFormat());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}

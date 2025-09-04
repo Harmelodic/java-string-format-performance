@@ -46,7 +46,7 @@ class SimplePerformanceTests {
 
 	@Test
 	@Order(1)
-	void testUsingPlusOperator() {
+	void testPlusOperator() {
 		Duration timeTaken = simplePerformanceTest(new PlusOperator());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
@@ -54,16 +54,25 @@ class SimplePerformanceTests {
 
 	@Test
 	@Order(2)
-	void testUsingPlusOperatorWithConstants() {
+	void testPlusOperatorWithConstants() {
 		Duration timeTaken = simplePerformanceTest(new PlusOperatorWithConstant());
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	/// Temperamental - when before StringBuilder it is slower, but when after StringBuilder it's faster.
+	@Test
+	@Order(3)
+	void testApacheStringUtils() {
+		Duration timeTaken = simplePerformanceTest(new ApacheStringUtils());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	/// Temperamental - can sometimes be faster or slower than StringBuffer and/or StringJoinWithPlusOperator.
 	@Test
-	@Order(3)
-	void testUsingStringBuilder() {
+	@Order(4)
+	void testStringBuilder() {
 		Duration timeTaken = simplePerformanceTest(new StringBuilderToString());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
@@ -71,8 +80,8 @@ class SimplePerformanceTests {
 
 	/// Temperamental - can sometimes be faster or slower than StringBuilder and/or StringJoinWithPlusOperator.
 	@Test
-	@Order(4)
-	void testUsingStringBuffer() {
+	@Order(5)
+	void testStringBuffer() {
 		Duration timeTaken = simplePerformanceTest(new StringBufferToString());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
@@ -80,16 +89,16 @@ class SimplePerformanceTests {
 
 	/// Temperamental - can sometimes be faster or slower than StringBuffer and/or StringBuilder.
 	@Test
-	@Order(5)
-	void testUsingStringJoin() {
+	@Order(6)
+	void testStringJoin() {
 		Duration timeTaken = simplePerformanceTest(new StringJoinWithPlusOperator());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	@Test
-	@Order(6)
-	void testUsingStringFormat() {
+	@Order(7)
+	void testStringFormat() {
 		Duration timeTaken = simplePerformanceTest(new StringFormat());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);

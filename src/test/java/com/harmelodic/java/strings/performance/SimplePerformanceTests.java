@@ -60,6 +60,7 @@ class SimplePerformanceTests {
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
+	/// Temperamental - can sometimes be faster or slower than StringBuffer and/or StringJoinWithPlusOperator.
 	@Test
 	@Order(3)
 	void testUsingStringBuilder() {
@@ -68,7 +69,7 @@ class SimplePerformanceTests {
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
-	/// Temperamental - can sometimes be faster or slower than StringBuilder.
+	/// Temperamental - can sometimes be faster or slower than StringBuilder and/or StringJoinWithPlusOperator.
 	@Test
 	@Order(4)
 	void testUsingStringBuffer() {
@@ -77,8 +78,17 @@ class SimplePerformanceTests {
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
+	/// Temperamental - can sometimes be faster or slower than StringBuffer and/or StringBuilder.
 	@Test
 	@Order(5)
+	void testUsingStringJoin() {
+		Duration timeTaken = simplePerformanceTest(new StringJoinWithPlusOperator());
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	@Test
+	@Order(6)
 	void testUsingStringFormat() {
 		Duration timeTaken = simplePerformanceTest(new StringFormat());
 		assertTrue(timeTaken.isPositive());

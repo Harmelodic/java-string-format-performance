@@ -65,8 +65,17 @@ class SimplePerformanceTests {
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
+	/// Temperamental - can sometimes be faster or slower than StringBuilder.
 	@Test
 	@Order(4)
+	void testUsingStringBuffer() {
+		Duration timeTaken = simplePerformanceTest(new StringBufferToString());
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	@Test
+	@Order(5)
 	void testUsingStringFormat() {
 		Duration timeTaken = simplePerformanceTest(new StringFormat());
 		assertTrue(timeTaken.isPositive());

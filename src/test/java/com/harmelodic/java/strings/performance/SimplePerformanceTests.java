@@ -78,6 +78,20 @@ class SimplePerformanceTests {
 	}
 
 	@Test
+	void testStringJoin() {
+		Duration timeTaken = simplePerformanceTest(new StringJoinWithPlusOperator());
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	@Test
+	void testStringFormat() {
+		Duration timeTaken = simplePerformanceTest(new StringFormat());
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	@Test
 	void testStringBuilder() {
 		Duration timeTaken = simplePerformanceTest(new StringBuilderToString());
 		assertTrue(timeTaken.isPositive());
@@ -92,15 +106,8 @@ class SimplePerformanceTests {
 	}
 
 	@Test
-	void testStringJoin() {
-		Duration timeTaken = simplePerformanceTest(new StringJoinWithPlusOperator());
-		assertTrue(timeTaken.isPositive());
-		assertTrue(timeTaken.toMillis() < 5000);
-	}
-
-	@Test
-	void testStringFormat() {
-		Duration timeTaken = simplePerformanceTest(new StringFormat());
+	void testStringJoiner() {
+		Duration timeTaken = simplePerformanceTest(new StringJoinerToString());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}

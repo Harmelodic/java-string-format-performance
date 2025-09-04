@@ -79,7 +79,7 @@ class SimplePerformanceTests {
 
 	@Test
 	void testStringJoin() {
-		Duration timeTaken = simplePerformanceTest(new StringJoinWithPlusOperator());
+		Duration timeTaken = simplePerformanceTest(new StringJoin());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
@@ -108,6 +108,13 @@ class SimplePerformanceTests {
 	@Test
 	void testStringJoiner() {
 		Duration timeTaken = simplePerformanceTest(new StringJoinerToString());
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	@Test
+	void testStreamCollectorsJoining() {
+		Duration timeTaken = simplePerformanceTest(new StreamCollectorsJoining());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}

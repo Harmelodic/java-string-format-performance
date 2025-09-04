@@ -1,37 +1,27 @@
 package com.harmelodic.java.strings.performance;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/// Ordering based on speed as of JDK 24.
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SimplePerformanceTests {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimplePerformanceTests.class);
 
-	static Duration simplePerformanceTest(SimpleStringConcatenation formatter, boolean log) {
-		Instant start = Instant.now();
+	private static final List<Result> results = new ArrayList<>();
 
-		for (int i = 0; i < 10_000_000; i++) {
-			formatter.format(String.valueOf(i), String.valueOf(i + 1));
-		}
-		Duration timeTaken = Duration.between(start, Instant.now());
-
-		assertEquals("::one::two::", formatter.format("one", "two"));
-		if (log) {
-			LOGGER.info("{} ms for formatter: {}", timeTaken.toMillis(), formatter.getClass().getSimpleName());
-		}
-		return timeTaken;
+	private record Result(String formatterName, Duration timeTaken) {
 	}
 
 	@BeforeAll
@@ -43,74 +33,82 @@ class SimplePerformanceTests {
 			}
 		}
 
-		simplePerformanceTest(new WarmUp(), false);
+		simplePerformanceTest(new WarmUp());
 	}
 
+	@AfterAll
+	static void report() {
+		results.stream()
+				.sorted(Comparator.comparing(o -> o.timeTaken))
+				.forEach(result ->
+						LOGGER.info("{} ms for formatter: {}", result.timeTaken.toMillis(), result.formatterName));
+	}
+
+	static Duration simplePerformanceTest(SimpleStringConcatenation formatter) {
+		Instant start = Instant.now();
+
+		for (int i = 0; i < 10_000_000; i++) {
+			formatter.format(String.valueOf(i), String.valueOf(i + 1));
+		}
+		Duration timeTaken = Duration.between(start, Instant.now());
+
+		assertEquals("::one::two::", formatter.format("one", "two"));
+		results.add(new Result(formatter.getClass().getSimpleName(), timeTaken));
+		return timeTaken;
+	}
 
 	@Test
-	@Order(1)
 	void testPlusOperator() {
-		Duration timeTaken = simplePerformanceTest(new PlusOperator(), true);
+		Duration timeTaken = simplePerformanceTest(new PlusOperator());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	@Test
-	@Order(2)
 	void testPlusOperatorWithConstants() {
-		Duration timeTaken = simplePerformanceTest(new PlusOperatorWithConstant(), true);
+		Duration timeTaken = simplePerformanceTest(new PlusOperatorWithConstant());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	@Test
-	@Order(3)
 	void testStringConcat() {
-		Duration timeTaken = simplePerformanceTest(new StringConcat(), true);
+		Duration timeTaken = simplePerformanceTest(new StringConcat());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
-	/// Temperamental - when before StringBuilder it is slower, but when after StringBuilder it's faster.
 	@Test
-	@Order(4)
 	void testApacheStringUtils() {
-		Duration timeTaken = simplePerformanceTest(new ApacheStringUtilsWrapWithPlusOperator(), true);
+		Duration timeTaken = simplePerformanceTest(new ApacheStringUtilsWrapWithPlusOperator());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
-	/// Temperamental - can sometimes be faster or slower than StringBuffer and/or StringJoinWithPlusOperator.
 	@Test
-	@Order(5)
 	void testStringBuilder() {
-		Duration timeTaken = simplePerformanceTest(new StringBuilderToString(), true);
+		Duration timeTaken = simplePerformanceTest(new StringBuilderToString());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
-	/// Temperamental - can sometimes be faster or slower than StringBuilder and/or StringJoinWithPlusOperator.
 	@Test
-	@Order(6)
 	void testStringBuffer() {
-		Duration timeTaken = simplePerformanceTest(new StringBufferToString(), true);
+		Duration timeTaken = simplePerformanceTest(new StringBufferToString());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
-	/// Temperamental - can sometimes be faster or slower than StringBuffer and/or StringBuilder.
 	@Test
-	@Order(7)
 	void testStringJoin() {
-		Duration timeTaken = simplePerformanceTest(new StringJoinWithPlusOperator(), true);
+		Duration timeTaken = simplePerformanceTest(new StringJoinWithPlusOperator());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	@Test
-	@Order(8)
 	void testStringFormat() {
-		Duration timeTaken = simplePerformanceTest(new StringFormat(), true);
+		Duration timeTaken = simplePerformanceTest(new StringFormat());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}

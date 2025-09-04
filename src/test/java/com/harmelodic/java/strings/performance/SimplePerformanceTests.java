@@ -1,5 +1,6 @@
 package com.harmelodic.java.strings.performance;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SimplePerformanceTests {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimplePerformanceTests.class);
 
-	Duration simplePerformanceTest(SimpleStringConcatenation formatter) {
+	static Duration simplePerformanceTest(SimpleStringConcatenation formatter, boolean log) {
 		Instant start = Instant.now();
 
 		for (int i = 0; i < 10_000_000; i++) {
@@ -27,13 +28,14 @@ class SimplePerformanceTests {
 		Duration timeTaken = Duration.between(start, Instant.now());
 
 		assertEquals("::one::two::", formatter.format("one", "two"));
-		LOGGER.info("{} ms for formatter: {}", timeTaken.toMillis(), formatter.getClass().getSimpleName());
+		if (log) {
+			LOGGER.info("{} ms for formatter: {}", timeTaken.toMillis(), formatter.getClass().getSimpleName());
+		}
 		return timeTaken;
 	}
 
-	@Test
-	@Order(0)
-	void warmUp() {
+	@BeforeAll
+	static void warmUp() {
 		class WarmUp implements SimpleStringConcatenation {
 			@Override
 			public String format(String string1, String string2) {
@@ -41,13 +43,14 @@ class SimplePerformanceTests {
 			}
 		}
 
-		simplePerformanceTest(new WarmUp());
+		simplePerformanceTest(new WarmUp(), false);
 	}
+
 
 	@Test
 	@Order(1)
 	void testPlusOperator() {
-		Duration timeTaken = simplePerformanceTest(new PlusOperator());
+		Duration timeTaken = simplePerformanceTest(new PlusOperator(), true);
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
@@ -55,51 +58,59 @@ class SimplePerformanceTests {
 	@Test
 	@Order(2)
 	void testPlusOperatorWithConstants() {
-		Duration timeTaken = simplePerformanceTest(new PlusOperatorWithConstant());
+		Duration timeTaken = simplePerformanceTest(new PlusOperatorWithConstant(), true);
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	@Test
+	@Order(3)
+	void testStringConcat() {
+		Duration timeTaken = simplePerformanceTest(new StringConcat(), true);
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	/// Temperamental - when before StringBuilder it is slower, but when after StringBuilder it's faster.
 	@Test
-	@Order(3)
+	@Order(4)
 	void testApacheStringUtils() {
-		Duration timeTaken = simplePerformanceTest(new ApacheStringUtilsWrapWithPlusOperator());
+		Duration timeTaken = simplePerformanceTest(new ApacheStringUtilsWrapWithPlusOperator(), true);
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	/// Temperamental - can sometimes be faster or slower than StringBuffer and/or StringJoinWithPlusOperator.
 	@Test
-	@Order(4)
+	@Order(5)
 	void testStringBuilder() {
-		Duration timeTaken = simplePerformanceTest(new StringBuilderToString());
+		Duration timeTaken = simplePerformanceTest(new StringBuilderToString(), true);
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	/// Temperamental - can sometimes be faster or slower than StringBuilder and/or StringJoinWithPlusOperator.
 	@Test
-	@Order(5)
+	@Order(6)
 	void testStringBuffer() {
-		Duration timeTaken = simplePerformanceTest(new StringBufferToString());
+		Duration timeTaken = simplePerformanceTest(new StringBufferToString(), true);
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	/// Temperamental - can sometimes be faster or slower than StringBuffer and/or StringBuilder.
 	@Test
-	@Order(6)
+	@Order(7)
 	void testStringJoin() {
-		Duration timeTaken = simplePerformanceTest(new StringJoinWithPlusOperator());
+		Duration timeTaken = simplePerformanceTest(new StringJoinWithPlusOperator(), true);
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	@Test
-	@Order(7)
+	@Order(8)
 	void testStringFormat() {
-		Duration timeTaken = simplePerformanceTest(new StringFormat());
+		Duration timeTaken = simplePerformanceTest(new StringFormat(), true);
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}

@@ -1,6 +1,6 @@
 package com.harmelodic.java.strings.performance;
 
-public class UsingPlusOperatorWithConstants implements SimpleStringConcatenation {
+public class PlusOperatorWithConstant implements SimpleStringConcatenation {
 	private static final String DOUBLE_COLON = "::";
 
 	@Override

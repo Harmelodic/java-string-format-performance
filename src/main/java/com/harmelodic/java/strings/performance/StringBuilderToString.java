@@ -1,7 +1,8 @@
 package com.harmelodic.java.strings.performance;
 
 @SuppressWarnings("StringBufferReplaceableByString")
-public class UsingStringBuilder implements SimpleStringConcatenation {
+public class StringBuilderToString implements SimpleStringConcatenation {
+
 	@Override
 	public String format(String string1, String string2) {
 		StringBuilder stringBuilder = new StringBuilder("::");

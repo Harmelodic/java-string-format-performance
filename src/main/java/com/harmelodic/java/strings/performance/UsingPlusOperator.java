@@ -1,8 +1,8 @@
 package com.harmelodic.java.strings.performance;
 
-public class StringFormat implements SimpleStringConcatenation {
+public class UsingPlusOperator implements SimpleStringConcatenation {
 	@Override
 	public String format(String string1, String string2) {
-		return String.format("::%s::%s::", string1, string2);
+		return "::" + string1 + "::" + string2 + "::";
 	}
 }

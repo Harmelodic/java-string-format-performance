@@ -25,15 +25,22 @@ class SimplePerformanceTests {
 	}
 
 	@Test
-	void testPlusOperator() {
-		Duration timeTaken = simplePerformanceTest(new PlusOperator());
+	void testUsingPlusOperator() {
+		Duration timeTaken = simplePerformanceTest(new UsingPlusOperator());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}
 
 	@Test
-	void testStringFormat() {
-		Duration timeTaken = simplePerformanceTest(new StringFormat());
+	void testUsingStringFormat() {
+		Duration timeTaken = simplePerformanceTest(new UsingStringFormat());
+		assertTrue(timeTaken.isPositive());
+		assertTrue(timeTaken.toMillis() < 5000);
+	}
+
+	@Test
+	void testUsingStringBuilder() {
+		Duration timeTaken = simplePerformanceTest(new UsingStringBuilder());
 		assertTrue(timeTaken.isPositive());
 		assertTrue(timeTaken.toMillis() < 5000);
 	}

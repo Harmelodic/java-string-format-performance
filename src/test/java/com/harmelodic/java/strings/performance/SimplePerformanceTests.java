@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.time.Instant;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /// Ordering based on speed as of JDK 24.
@@ -24,6 +25,8 @@ class SimplePerformanceTests {
 			formatter.format(String.valueOf(i), String.valueOf(i + 1));
 		}
 		Duration timeTaken = Duration.between(start, Instant.now());
+
+		assertEquals("::one::two::", formatter.format("one", "two"));
 		LOGGER.info("{} ms for formatter: {}", timeTaken.toMillis(), formatter.getClass().getSimpleName());
 		return timeTaken;
 	}
@@ -34,7 +37,7 @@ class SimplePerformanceTests {
 		class WarmUp implements SimpleStringConcatenation {
 			@Override
 			public String format(String string1, String string2) {
-				return "";
+				return "::" + string1 + "::" + string2 + "::";
 			}
 		}
 
